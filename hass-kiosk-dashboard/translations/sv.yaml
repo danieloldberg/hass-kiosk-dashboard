@@ -1,0 +1,4 @@
+configuration:
+  settings_users:
+    name: Användare som får ändra inställningar
+    description: Home Assistant-användarnamn, inte visningsnamn. Övriga inloggade användare kan visa dashboarden och styra valda lampor.

@@ -1,0 +1,4 @@
+configuration:
+  settings_users:
+    name: Users allowed to change settings
+    description: Home Assistant usernames, not display names. Other signed-in users can view the dashboard and control selected lights.

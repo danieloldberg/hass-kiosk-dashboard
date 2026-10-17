@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#151c24">
+  <title>hass-kiosk-dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="dashboard">
+    <header class="header">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">h<span>.</span></span><div><h1>hass-kiosk-dashboard</h1><div id="today-label" class="muted">Välkommen hem</div></div></div>
+      <div class="header-right"><span id="connection" class="connection">Demoläge</span><button id="refresh-button" class="icon-button" title="Uppdatera" aria-label="Uppdatera">&#8635;</button><button id="settings-button" class="icon-button" title="Inställningar" aria-label="Inställningar">&#9881;</button><div class="clock" id="clock">--:--</div></div>
+    </header>
+
+    <main>
+      <section class="calendar panel" aria-labelledby="calendar-title">
+        <div class="section-header"><div><span class="eyebrow">FAMILJENS PLANER</span><h2 id="calendar-title">Kalender</h2></div><div class="calendar-navigation"><button id="previous-week" class="small-button" aria-label="Föregående vecka">&#8249;</button><button id="today-button" class="text-button">Idag</button><button id="next-week" class="small-button" aria-label="Nästa vecka">&#8250;</button></div></div>
+        <div class="month-row"><span id="month-label"></span><span id="week-label" class="muted"></span></div>
+        <div id="week-days" class="week-days" aria-label="Välj dag"></div>
+        <div id="calendar-filters" class="calendar-filters" aria-label="Visa kalendrar"></div>
+        <div class="agenda-heading"><h3 id="agenda-title">Idag</h3><span id="event-count" class="muted"></span></div>
+        <div id="agenda" class="agenda" aria-live="polite"></div>
+      </section>
+
+      <section class="weather panel" aria-labelledby="weather-title">
+        <div class="section-header"><div><span class="eyebrow">UTANFÖR FÖNSTRET</span><h2 id="weather-title">Vädret</h2></div><span id="weather-location" class="muted">Hemma</span></div>
+        <div class="current-weather"><div id="weather-icon" class="weather-icon" aria-hidden="true"></div><div><div id="temperature" class="temperature">--<span>°</span></div><div id="weather-condition" class="weather-condition">Väntar på väder</div></div></div>
+        <div class="weather-details"><div><span class="detail-symbol" aria-hidden="true">&#8599;</span><span id="wind">--</span><small>Vind</small></div><div><span class="detail-symbol" aria-hidden="true">&#9681;</span><span id="humidity">--</span><small>Luftfuktighet</small></div></div>
+        <div id="forecast" class="forecast"></div>
+      </section>
+
+      <section class="lights-section" aria-labelledby="lights-title"><div class="lights-heading"><div><span class="eyebrow">LITE LJUS I VARDAGEN</span><h2 id="lights-title">Belysning <span id="lights-count" class="muted"></span></h2></div><button id="all-off" class="text-button">Släck alla <span aria-hidden="true">&#8594;</span></button></div><div id="lights" class="lights"></div></section>
+    </main>
+    <footer><span><span class="footer-dot"></span> En liten överblick över hemma <a id="direct-link" href="./" target="_top" hidden>Öppna utan ram &#8599;</a></span><span id="last-updated">Ansluter till servern…</span></footer>
+  </div>
+
+  <div id="settings-overlay" class="overlay" hidden>
+    <section class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="section-header"><h2 id="settings-title">Inställningar</h2><button id="close-settings" class="icon-button" aria-label="Stäng">&#215;</button></div>
+      <form id="settings-form">
+        <p class="settings-intro">Gemensamma inställningar för alla skärmar. Ändringar hämtas automatiskt inom 15 sekunder.</p>
+        <p id="ingress-settings-hint" class="hint" hidden>Anslutningen sköts av Home Assistant. Ingen token behövs. Ditt användarnamn måste finnas i tilläggets settings_users för att ändra inställningarna.</p>
+        <div id="standalone-settings">
+        <label for="admin-key">Administratörsnyckel</label><input id="admin-key" type="password" autocomplete="off" placeholder="Serverns HEMMA_ADMIN_KEY"><p class="hint">Krävs för att hämta enheter och spara inställningar.</p>
+        <label for="ha-url">Home Assistant-adress</label><input id="ha-url" type="url" placeholder="http://homeassistant.local:8123" autocomplete="url"><p class="hint">Adressen ska kunna nås från dashboardens server.</p>
+        <label for="ha-token">Långlivad åtkomsttoken</label><input id="ha-token" type="password" autocomplete="off" spellcheck="false" placeholder="Klistra in din token"><p class="hint">Skapa en token under din profil → Säkerhet i Home Assistant.</p>
+        </div>
+        <div class="settings-actions"><button id="discover-button" class="primary-button" type="button">Anslut och hämta enheter</button><span id="settings-status" role="status"></span></div>
+        <div id="entity-settings" hidden><label for="weather-select">Väder</label><select id="weather-select"></select><div class="entity-columns"><fieldset><legend>Kalendrar</legend><div id="calendar-options"></div></fieldset><fieldset><legend>Lampor</legend><div id="light-options"></div></fieldset></div></div>
+        <div class="settings-actions bottom-actions"><button type="submit" class="primary-button">Spara för alla skärmar</button><button id="demo-button" type="button" class="text-button">Visa demo på alla skärmar</button></div>
+        <p id="standalone-settings-hint" class="hint">Home Assistant-token sparas endast på servern. Den hämtas aldrig av surfplattan. Lämna tokenfältet tomt för att behålla en sparad token.</p>
+      </form>
+    </section>
+  </div>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <div id="session-notice" class="session-notice" role="alert" hidden>Sessionen har gått ut. Öppna hass-kiosk-dashboard via Home Assistant igen. <a href="/" target="_top">Öppna Home Assistant &#8599;</a></div>
+  <script src="app.js"></script>
+</body>
+</html>
